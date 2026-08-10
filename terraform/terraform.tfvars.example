@@ -1,0 +1,5 @@
+# Copy to terraform.tfvars and fill in your real project id.
+# terraform.tfvars is gitignored.
+
+gcp_project_id = "your-gcp-project-id"
+gcp_region     = "US"

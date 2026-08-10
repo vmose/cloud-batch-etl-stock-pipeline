@@ -1,0 +1,29 @@
+version: 2
+
+sources:
+  - name: raw
+    database: "{{ env_var('GCP_PROJECT_ID') }}"
+    schema: "{{ env_var('BQ_RAW_DATASET', 'raw') }}"
+    tables:
+      - name: stock_ticks
+        description: >
+          Append-only, untransformed stock tick records loaded directly
+          from GCS by the Airflow pipeline. One row per tick per symbol.
+        loaded_at_field: _ingested_at
+        freshness:
+          warn_after: {count: 26, period: hour}
+          error_after: {count: 48, period: hour}
+        columns:
+          - name: symbol
+            description: Stock ticker symbol
+          - name: timestamp
+            description: Timestamp of the tick, as reported by the source API
+          - name: open
+          - name: high
+          - name: low
+          - name: close
+          - name: volume
+          - name: _ingested_at
+            description: When this row was loaded into BigQuery (pipeline metadata, not source data)
+          - name: _source_file
+            description: The GCS raw file this row was loaded from, for traceability back to the original API response

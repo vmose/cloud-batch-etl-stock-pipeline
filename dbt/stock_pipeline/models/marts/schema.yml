@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: fct_stock_prices_daily
+    description: One row per symbol per trading day — the primary table for downstream reporting and dashboards.
+    columns:
+      - name: symbol
+        tests:
+          - not_null
+      - name: trade_date
+        tests:
+          - not_null
+      - name: close_price
+        tests:
+          - not_null
+      - name: high_price
+        description: Should never be lower than low_price for the same row
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - symbol
+            - trade_date
+      - dbt_utils.expression_is_true:
+          expression: "high_price >= low_price"

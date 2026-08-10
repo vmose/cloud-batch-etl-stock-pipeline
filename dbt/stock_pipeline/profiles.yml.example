@@ -1,0 +1,16 @@
+# Copy this to profiles.yml (gitignored) and fill in your real project id,
+# or better: set these via environment variables so nothing sensitive is
+# ever written to disk in plaintext.
+
+stock_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: "{{ env_var('GCP_PROJECT_ID') }}"
+      dataset: analytics
+      keyfile: "{{ env_var('GOOGLE_APPLICATION_CREDENTIALS') }}"
+      threads: 4
+      timeout_seconds: 300
+      location: US

@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_stock_ticks
+    description: Cleaned, deduplicated stock tick records — one row per symbol per timestamp.
+    columns:
+      - name: symbol
+        description: Stock ticker symbol, uppercased and trimmed
+        tests:
+          - not_null
+      - name: tick_at
+        description: Timestamp of the tick
+        tests:
+          - not_null
+      - name: close_price
+        description: Closing price for the tick interval
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: false
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - symbol
+            - tick_at
